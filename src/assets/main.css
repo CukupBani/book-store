@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap');
+
+@import "tailwindcss";
+
+:root {
+  --primary-color: #EB7F24;
+  --secondary-color: #4EA048 ;
+}
+
+@theme {
+  --color-primary: var(--primary-color);
+  --color-secondary: var(--secondary-color);
+  --bg-primary: var(--primary-color);
+  --bg-secondary: var(--secondary-color);
+}
+
+.section-padding {
+  @apply px-6 py-12 md:px-16 md:py-14
+}
+
+.btn-primary {
+  @apply bg-primary text-white font-medium py-3 md:py-4 px-8 text-lg md:text-xl rounded-xl duration-300 cursor-pointer hover:bg-black
+}
+
+.btn-secondary {
+  @apply bg-white text-primary font-medium py-3 md:py-4 px-8 text-lg md:text-xl rounded-xl duration-300 cursor-pointer hover:bg-black hover:text-white
+}
