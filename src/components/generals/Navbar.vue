@@ -13,7 +13,7 @@ const toggleSidebar = () => {
 </script>
 
 <template>
-  <nav class="sticky top-0 px-6 md:px-16 py-4 backdrop-blur-2xl">
+  <nav class="sticky z-20 top-0 px-6 md:px-16 py-4 backdrop-blur-2xl">
     <div class="flex items-center justify-between gap-12">
       <Logo />
 
