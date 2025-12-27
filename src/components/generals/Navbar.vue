@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { MENUS } from '@/constants';
-import { Menu, Search, User } from 'lucide-vue-next';
+import { Menu, Search, User, X } from 'lucide-vue-next';
 import Logo from './Logo.vue';
 import { ref } from 'vue';
 
@@ -40,7 +40,8 @@ const toggleSidebar = () => {
         class="flex lg:hidden p-2 bg-primary text-white rounded-lg"
         @click="toggleSidebar"
       >
-        <Menu class="h-6 w-6" />
+        <Menu v-if="!isSidebarOpen" class="h-6 w-6" />
+        <X v-else class="h-6 w-6" />
       </button>
     </div>
 

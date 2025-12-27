@@ -110,7 +110,7 @@ watch(
           type="text"
           v-model="searchInput"
           placeholder="Cari buku disini..."
-          class="focus:outline-none px-4 text-lg md:text-2xl py-2 md:py-4"
+          class="focus:outline-none px-4 text-lg md:text-2xl py-2 md:py-4 w-full"
         />
       </div>
     </div>

@@ -138,7 +138,7 @@ const resetFilters = () => {
           <label
             v-for="brand in brands"
             :key="brand"
-            class="flex items-center gap-2"
+            class="flex items-center gap-2 cursor-pointer"
           >
             <input
               type="checkbox"
