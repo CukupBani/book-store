@@ -198,7 +198,7 @@ const resetFilters = () => {
     <div class="flex justify-end">
       <button
         @click="resetFilters"
-        class="bg-primary text-white py-2 px-6 rounded-lg mt-6"
+        class="bg-primary text-white py-2 px-6 rounded-lg mt-6 cursor-pointer duration-300 hover:bg-black"
       >
         Reset Filters
       </button>
