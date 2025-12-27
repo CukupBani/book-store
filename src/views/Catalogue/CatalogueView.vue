@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import Card from '@/components/generals/Card.vue';
-import FilterBox from '@/components/pages/Catalogue/FilterBox.vue';
+import FilterBox from '@/components/generals/FilterBox.vue';
 import { useBooks } from '@/composables/useBooks';
+import { Search } from 'lucide-vue-next';
 import { computed, onMounted, ref, watch } from 'vue';
 
 const { books, isLoading, error, getBooks } = useBooks();
@@ -9,6 +10,10 @@ const { books, isLoading, error, getBooks } = useBooks();
 const selectedCategories = ref<string[]>([]);
 const selectedBrands = ref<string[]>([]);
 const priceRange = ref<[number, number]>([0, 0]);
+const searchInput = ref('');
+const searchQuery = ref('');
+
+let searchTimeout: number | undefined;
 
 onMounted(() => {
   getBooks();
@@ -28,7 +33,12 @@ const filteredBooks = computed(() => {
       book.price >= priceRange.value[0] &&
       book.price <= priceRange.value[1];
 
-    return matchCategory && matchBrand && matchPrice;
+    const matchSearch =
+      searchQuery.value === '' ||
+      book.title.toLowerCase().includes(searchQuery.value) ||
+      book.brand.toLowerCase().includes(searchQuery.value);
+
+    return matchCategory && matchBrand && matchPrice && matchSearch;
   });
 });
 
@@ -56,6 +66,13 @@ const maxPrice = computed(() => {
   return Math.max(...books.value.map(b => b.price));
 });
 
+watch(searchInput, value => {
+  clearTimeout(searchTimeout);
+  searchTimeout = window.setTimeout(() => {
+    searchQuery.value = value.trim().toLowerCase();
+  }, 300);
+});
+
 watch(
   () => books.value,
   () => {
@@ -69,9 +86,7 @@ watch(
 <template>
   <div>
     <!-- Header -->
-    <div class="section-padding bg-primary flex flex-col-reverse md:flex-row items-center justify-between md:gap-6">
-      <h1 class="font-extrabold text-4xl md:text-7xl text-white text-center md:text-start">Books Catalogue</h1>
-
+    <div class="section-padding bg-primary flex flex-col md:gap-6">
       <!-- breadcrumbs -->
       <div class="flex items-center gap-2 md:text-xl">
         <router-link 
@@ -82,6 +97,21 @@ watch(
         </router-link>
         <span class="text-white">/</span>
         <span class="text-white font-semibold">Catalogue</span>
+      </div>
+
+      <h1 class="mt-8 md:mt-4 font-extrabold text-4xl md:text-7xl text-white text-center">Books Catalogue</h1>
+
+      <div class="mt-4 md:mt-2 flex items-center border border-gray-200 bg-white rounded-full w-full lg:w-7/12 mx-auto">
+        <div class="pl-4">
+          <Search class="w-8 h-8 text-gray-400" />
+        </div>
+
+        <input
+          type="text"
+          v-model="searchInput"
+          placeholder="Cari buku disini..."
+          class="focus:outline-none px-4 text-lg md:text-2xl py-2 md:py-4"
+        />
       </div>
     </div>
 
@@ -117,6 +147,13 @@ watch(
             <div class="animate-pulse bg-gray-300 h-5 w-3/4 rounded-lg mt-3"></div>
             <div class="animate-pulse bg-gray-300 h-5 w-1/2 rounded-lg mt-3"></div>
           </div>
+        </div>
+
+        <!-- Empty State -->
+        <div v-else-if="filteredBooks.length === 0" class="flex flex-col items-center text-center mt-12">
+          <img src="/images/no-data.png" class="h-56 md:h-64 w-auto" />
+          <h2 class="text-2xl md:text-3xl font-medium">No books found</h2>
+          <p class="text-gray-500 md:text-lg">Try adjusting your filters or search terms.</p>
         </div>
 
         <div v-else class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

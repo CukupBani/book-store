@@ -114,7 +114,7 @@ const resetFilters = () => {
               </svg>
             </span>
 
-            <span>{{ cat }}</span>
+            <span class="capitalize">{{ cat }}</span>
           </label>
         </div>
       </div>

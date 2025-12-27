@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Eye, Heart, ShoppingCart } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 
@@ -24,9 +25,23 @@ const emptyStars = computed(() =>
 </script>
 
 <template>
-  <div class="p-4 bg-white rounded-xl border border-gray-200 duration-300 cursor-pointer hover:shadow-lg hover:-translate-y-1">
-    <div class="flex bg-primary rounded-xl">
+  <div class="group p-4 bg-white rounded-xl border border-gray-200 duration-300 cursor-pointer hover:shadow-lg hover:-translate-y-1">
+    <div class="flex bg-primary rounded-xl h-72 lg:h-88 relative">
       <img :src="thumbnail" class="object-cover w-full h-full" />
+
+      <div class="absolute bottom-2 right-2 flex flex-col gap-2">
+        <div class="opacity-0 duration-300 transition-all cursor-pointer group-hover:opacity-100 bg-white rounded-full text-primary p-1 hover:bg-black hover:text-white">
+          <Heart class="w-6 h-6" />
+        </div>
+        
+        <div class="opacity-0 duration-300 transition-all cursor-pointer delay-150 group-hover:opacity-100 bg-white rounded-full text-primary p-1 hover:bg-black hover:text-white">
+          <ShoppingCart class="w-6 h-6" />
+        </div>
+
+        <div class="opacity-0 duration-300 transition-all cursor-pointer delay-300 group-hover:opacity-100 bg-white rounded-full text-primary p-1 hover:bg-black hover:text-white">
+          <Eye class="w-6 h-6" />
+        </div>
+      </div>
     </div>
 
     <div class="flex flex-col gap-1 mt-4">
