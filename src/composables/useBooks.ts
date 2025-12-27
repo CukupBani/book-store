@@ -12,7 +12,7 @@ export interface Book {
   brand: string;
 }
 
-export function useProducts() {
+export function useBooks() {
   const books = ref<Book[]>([]);
   const isLoading = ref(false);
   const error = ref<string | null>(null);

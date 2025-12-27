@@ -1,14 +1,68 @@
 <script setup lang="ts">
 import Card from '@/components/generals/Card.vue';
 import FilterBox from '@/components/pages/Catalogue/FilterBox.vue';
-import { useProducts } from '@/composables/useProducts';
-import { onMounted } from 'vue';
+import { useBooks } from '@/composables/useBooks';
+import { computed, onMounted, ref, watch } from 'vue';
 
-const { books, isLoading, error, getBooks } = useProducts();
+const { books, isLoading, error, getBooks } = useBooks();
+
+const selectedCategories = ref<string[]>([]);
+const selectedBrands = ref<string[]>([]);
+const priceRange = ref<[number, number]>([0, 0]);
 
 onMounted(() => {
   getBooks();
 });
+
+const filteredBooks = computed(() => {
+  return books.value.filter(book => {
+    const matchCategory =
+      selectedCategories.value.length === 0 ||
+      selectedCategories.value.includes(book.category);
+
+    const matchBrand =
+      selectedBrands.value.length === 0 ||
+      selectedBrands.value.includes(book.brand);
+
+    const matchPrice =
+      book.price >= priceRange.value[0] &&
+      book.price <= priceRange.value[1];
+
+    return matchCategory && matchBrand && matchPrice;
+  });
+});
+
+const resetFilters = () => {
+  selectedCategories.value = [];
+  selectedBrands.value = [];
+  priceRange.value = [0, 1000000];
+};
+
+const categories = computed(() => {
+  return [...new Set(books.value.map(b => b.category))];
+});
+
+const brands = computed(() => {
+  return [...new Set(books.value.map(b => b.brand))];
+});
+
+const minPrice = computed(() => {
+  if (books.value.length === 0) return 0;
+  return Math.min(...books.value.map(b => b.price));
+});
+
+const maxPrice = computed(() => {
+  if (books.value.length === 0) return 0;
+  return Math.max(...books.value.map(b => b.price));
+});
+
+watch(
+  () => books.value,
+  () => {
+    priceRange.value = [minPrice.value, maxPrice.value];
+  },
+  { immediate: true }
+);
 
 </script>
 
@@ -35,7 +89,17 @@ onMounted(() => {
     <div class="section-padding flex flex-col md:flex-row gap-8">
       <!-- Filter Box -->
       <div class="relative md:w-3/12">
-        <FilterBox class="sticky top-28" />
+        <FilterBox
+          class="sticky top-28"
+          :categories="categories"
+          :brands="brands"
+          :minPrice="minPrice"
+          :maxPrice="maxPrice"
+          @update-category="selectedCategories = $event"
+          @update-brand="selectedBrands = $event"
+          @update-price="priceRange = $event"
+          @reset="resetFilters"
+        />
       </div>
 
       <!-- Book List -->
@@ -57,7 +121,7 @@ onMounted(() => {
 
         <div v-else class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Card 
-            v-for="book in books"
+            v-for="book in filteredBooks"
             :key="book.id"
             :title="book.title"
             :thumbnail="book.thumbnail"
